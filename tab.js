@@ -8,21 +8,32 @@ function Tab (node){
 Tab.prototype = {
     constructor: Tab,
     init: function(){
-        var html = '';
-        for(var i=0;i<this.data.length;i++) {
-            html += '<li>' + this.data[i] + '</li>';
+        var tabHtml = '<li class="active">' + this.data[0] + '</li>',
+            panelHtml = '<div class="panel active">'+ this.data[0] +'</div>';
+        for(var i=1;i<this.data.length;i++) {
+            tabHtml += '<li>' + this.data[i] + '</li>';
+            panelHtml += '<div class="panel">'+ this.data[i] +'</div>';
         }
-        this.node.innerHTML = '<ul>' + html + '</ul>';
+        this.node.innerHTML = '<ul>' + tabHtml + '</ul>' + panelHtml;
     },
     bind: function(){
         var _this = this;
         this.node.addEventListener('click', function(e) {
+            var index;
             if(e.target.nodeName==='LI') {
                 var liArr = _this.node.querySelectorAll('li');
                 for(var i=0;i<liArr.length;i++) {
                     liArr[i].classList.remove('active');
+                    if(e.target==liArr[i]) {
+                        index = i;
+                        e.target.classList.add('active');
+                    }
                 }
-                e.target.classList.add('active');
+                var panelArr = _this.node.querySelectorAll('.panel');
+                panelArr.forEach(function (node) {
+                    node.classList.remove('active');
+                });
+                panelArr[index].classList.add('active');
             }
         })
     },
